@@ -1,0 +1,4 @@
+.DS_Store
+*.gpx
+*.csv
+node_modules/
