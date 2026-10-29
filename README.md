@@ -20,7 +20,7 @@ Open http://localhost:8000. No build step or dependencies are required. Deploy t
 - GPS-estimated speed with optional five-second median filtering.
 - Lean and speed charts, shared scrubber, trimming, video offsets and top estimated speed.
 - CSV exports with optional frame-rate interpolation and calibration metadata.
-- Plain-text lean overlays for Apple Motion's File text generator.
+- Separate plain-text lean-angle magnitude/direction and speed overlays for Apple Motion's File text generators.
 
 ## Interpretation
 
@@ -28,6 +28,6 @@ GPS-derived lean and speed are estimates, not recovered IMU or speedometer data.
 
 Enter peak-left and peak-right values as positive degree magnitudes for the same complete ride. Calibration uses the entire GPX before trimming. Loading another ride clears those values.
 
-CSV is not a direct Apple Motion rotation-keyframe format. For numeric overlays, choose fixed-frame-rate sampling and use the text export with Motion's File text generator. Verify timing in your composition.
+CSV is not a direct Apple Motion rotation-keyframe format. For two independent overlays, choose fixed-frame-rate sampling and export both Motion lean text and Motion speed text. Each file has one line per frame (including `—` for missing data). Lean displays the absolute angle and LEFT/RIGHT (STRAIGHT when zero); GPS estimates retain EST or CAL EST prefixes. Speed displays one decimal in the selected mph or km/h units; add the unit as a static label in Motion. Use a separate File text generator for each TXT file, select Constant speed, disable Random, use identical start points and durations (`row count / fps`), and account for your video offset. Verify synchronization in your composition.
 
 No personal GPX files are included in this repository.
