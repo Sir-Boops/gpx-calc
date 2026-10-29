@@ -4,13 +4,13 @@ Leanline is a browser-local GPX telemetry viewer and CSV exporter for motorcycle
 
 ## Run locally
 
-Open `dist/index.html` in a modern browser, or serve `dist/` with a static web server:
+Open `index.html` in a modern browser, or serve the repository root with a static web server:
 
 ```sh
-python3 -m http.server 8000 --directory dist
+python3 -m http.server 8000
 ```
 
-Open http://localhost:8000. No build step or dependencies are required. Deploy `dist/` to any static host.
+Open http://localhost:8000. No build step or dependencies are required. Deploy the repository root to any static host.
 
 ## Features
 
