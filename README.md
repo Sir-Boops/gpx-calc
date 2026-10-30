@@ -1,10 +1,10 @@
 # gpx-calc
 
-Leanline is a browser-local GPX telemetry viewer and CSV exporter for motorcycle video overlays.
+Leanline is a browser-local GPX telemetry viewer with two aligned CSV exports for motorcycle video overlays.
 
 ## Run locally
 
-Open `index.html` in a modern browser, or serve the repository root with a static web server:
+Open `index.html` in a modern browser, or serve the repository root:
 
 ```sh
 python3 -m http.server 8000
@@ -12,22 +12,23 @@ python3 -m http.server 8000
 
 Open http://localhost:8000. No build step or dependencies are required. Deploy the repository root to any static host.
 
-## Features
+## Exports
 
-- Local GPX parsing; ride files never leave the browser.
-- GPS-estimated lean, or explicit recorded lean extensions when available.
-- Independent left/right peak calibration using known full-ride maxima.
-- GPS-estimated speed with optional five-second median filtering.
-- Lean and speed charts, shared scrubber, trimming, video offsets and top estimated speed.
-- CSV exports with optional frame-rate interpolation and calibration metadata.
-- Separate plain-text lean-angle magnitude/direction and speed overlays for Apple Motion's File text generators.
+- **Lean angle CSV:** `frame,value`. Degrees, positive for left and negative for right; straight or missing data is `0`.
+- **Speed CSV:** `frame,value`. Speed in the selected mph or km/h unit; missing data is `0`. The filename identifies the unit.
 
-## Interpretation
+Each file has exactly two columns and a header row. Data indexes start at 0 and increase by 1. Both files use the same selected samples so row counts and indexes match. Numeric values retain up to four decimal places, with no text labels or degree symbols. Optional peak calibration applies to lean before export.
 
-GPS-derived lean and speed are estimates, not recovered IMU or speedometer data. Matching known lean peaks scales each side's magnitude; it does not validate intermediate angles or their timing. Missing intervals and track-segment boundaries remain gaps on the charts. Missing lean and speed samples export as `0` in CSV and Motion TXT files; CSV `source` and `speed_source` retain `missing` labels so those zeros are distinguishable from valid zeros. Optional calibration metadata remains blank when unset. Speed filtering reduces brief spikes but can suppress short peaks.
+Choose a fixed frame rate for one row per video frame; original sampling uses one row per GPS sample. At fixed fps, duration is row count divided by fps. These files omit timestamps: apply video alignment manually using your trim and video offset. Offset does not change indexes. Keep settings unchanged between the two downloads.
 
-Enter peak-left and peak-right values as positive degree magnitudes for the same complete ride. Calibration uses the entire GPX before trimming. Loading another ride clears those values.
+The previous multi-column CSV and Motion TXT exports have been replaced. CSV does not directly create Apple Motion keyframes; use a suitable conversion or importer for your video workflow.
 
-CSV is not a direct Apple Motion rotation-keyframe format. For two independent overlays, choose fixed-frame-rate sampling and export both Motion lean text and Motion speed text. Each file has one line per frame (including `0` for missing data). Lean displays the absolute angle and LEFT/RIGHT (STRAIGHT when zero); GPS estimates retain EST or CAL EST prefixes. Speed displays one decimal in the selected mph or km/h units; add the unit as a static label in Motion. Use a separate File text generator for each TXT file, select Constant speed, disable Random, use identical start points and durations (`row count / fps`), and account for your video offset. Verify synchronization in your composition.
+## Features and interpretation
+
+Files are parsed locally and never uploaded. The interface provides GPS-estimated lean, explicit recorded lean extensions when available, independent left/right full-ride peak calibration, GPS-estimated speed with optional five-second median filtering, charts, a shared scrubber, trimming, video offsets, and top estimated speed.
+
+GPS-derived lean and speed are estimates, not recovered IMU or speedometer data. Peak calibration adjusts magnitude, not timing. Enter peak magnitudes for the same complete ride; a new file clears them. Filtering can suppress short speed peaks.
+
+Charts keep gaps for missing data and use negative left/positive right. Lean CSV reverses that sign to positive left/negative right. Recorded lean signs are preserved internally; verify the device's convention before using recorded mode. Both CSV files replace missing values with 0, so missing samples cannot be distinguished from true zero values in the exports.
 
 No personal GPX files are included in this repository.
